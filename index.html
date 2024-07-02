@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Notifications Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Browser Notifications Example</h1>
+    <button id="notifyBtn">Show Notification</button>
+
+    <script>
+        // Check if the Notification API is supported
+        if ('Notification' in window) {
+            // Ask for notification permission on page load
+            document.addEventListener('DOMContentLoaded', () => {
+                if (Notification.permission === 'default') {
+                    Notification.requestPermission().then(permission => {
+                        if (permission !== 'granted') {
+                            alert('Notification permission denied');
+                        }
+                    });
+                }
+            });
+
+            document.getElementById('notifyBtn').addEventListener('click', () => {
+                if (Notification.permission === 'granted') {
+                    showNotification();
+                } else if (Notification.permission === 'default') {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === 'granted') {
+                            showNotification();
+                        } else {
+                            alert('Notification permission denied');
+                        }
+                    });
+                } else {
+                    alert('Notification permission denied');
+                }
+            });
+
+            function showNotification() {
+                const notification = new Notification('Hello!', {
+                    body: 'This is a browser notification.',
+                    icon: 'https://via.placeholder.com/150'
+                });
+
+                notification.onclick = () => {
+                    window.open('https://www.example.com');
+                };
+            }
+        } else {
+            alert('This browser does not support desktop notifications.');
+        }
+    </script>
+</body>
+</html>
